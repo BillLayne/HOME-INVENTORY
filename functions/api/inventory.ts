@@ -1,3 +1,14 @@
+
+export async function onRequestOptions() {
+  return new Response(null, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    }
+  });
+}
+
 import { GoogleGenAI } from "@google/genai";
 
 export async function onRequestPost(context: any) {
@@ -7,7 +18,7 @@ export async function onRequestPost(context: any) {
     
     const API_KEY = env.GEMINI_API_KEY || env.API_KEY;
     if (!API_KEY) {
-      return new Response(JSON.stringify({ error: "API_KEY environment variable not set" }), { status: 500 });
+      return new Response(JSON.stringify({ error: "API_KEY environment variable not set" }), { status: 500, headers: { 'Access-Control-Allow-Origin': '*' } });
     }
 
     const ai = new GoogleGenAI({ apiKey: API_KEY });
@@ -83,11 +94,11 @@ export async function onRequestPost(context: any) {
 
     const inventory = JSON.parse(jsonText);
     return new Response(JSON.stringify(inventory), {
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' }
     });
 
   } catch (error) {
     console.error("Error processing inventory:", error);
-    return new Response(JSON.stringify({ error: "Failed to process inventory" }), { status: 500 });
+    return new Response(JSON.stringify({ error: "Failed to process inventory" }), { status: 500, headers: { 'Access-Control-Allow-Origin': '*' } });
   }
 }
