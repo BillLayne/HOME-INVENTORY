@@ -2,7 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#003f87" />
     <title>Bill Layne Insurance - Home Inventory</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,20 +18,23 @@
               display: ['Outfit', 'sans-serif'],
             },
             colors: {
+              // Bill Layne Insurance brand palette — navy primary, gold accent.
+              // Tailwind CDN JIT means this single config recolors every
+              // bg-primary-* / text-primary-* class throughout the React bundle.
               primary: {
-                50: '#eef2ff',
-                100: '#e0e7ff',
-                200: '#c7d2fe',
-                300: '#a5b4fc',
-                400: '#818cf8',
-                500: '#6366f1',
-                600: '#4f46e5', // Your Electric Indigo
-                700: '#4338ca',
-                800: '#3730a3',
-                900: '#312e81',
+                50:  '#e6effa',
+                100: '#cce0f5',
+                200: '#99c1eb',
+                300: '#66a2e1',
+                400: '#3383d7',
+                500: '#0076d3', // BLI Cerulean
+                600: '#003f87', // BLI Navy (primary)
+                700: '#003270',
+                800: '#002659',
+                900: '#001d42',
               },
               accent: {
-                400: '#fbbf24', // Your Warm Amber/Gold
+                400: '#fbbf24', // Warm gold (kept from prior config)
                 500: '#f59e0b',
               }
             }
@@ -51,9 +55,109 @@
         backdrop-filter: blur(10px);
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
       }
+      .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0); }
+      .safe-top    { padding-top: env(safe-area-inset-top, 0); }
+
+      /* Trust line injected by the script below. Forced full-width
+         so it never gets sucked into a parent flex row next to a CTA. */
+      .bli-trust-line {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8125rem;
+        line-height: 1.4;
+        color: #475569;
+        margin-top: 0.75rem;
+        padding: 0.625rem 0.75rem;
+        background: #f1f5f9;
+        border-radius: 0.5rem;
+        width: 100%;
+        flex: 0 0 100%;
+        box-sizing: border-box;
+      }
+      .bli-trust-line svg {
+        flex-shrink: 0;
+        width: 1rem;
+        height: 1rem;
+        color: #0076d3;
+      }
     </style>
 
   <script type="module" crossorigin src="/HOME-INVENTORY/assets/index-CA0zizbw.js"></script>
+
+  <!-- BLI trust line: privacy reassurance on the customer-details
+       screen and the photo capture screen. Idempotent, non-destructive. -->
+  <script>
+    (function () {
+      var LOCK_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+
+      // Card matcher — the bundle uses bg-white OR a gradient like
+      // "bg-gradient-to-br from-white to-primary-50/...". Match both
+      // via the rounded-{xl,2xl,3xl} + shadow combo that all cards
+      // share, AND the card must contain a non-trivial number of
+      // children (a button or input alone often has shadow+rounded
+      // too). Skips the starting element.
+      function findCard(start) {
+        var el = start.parentElement;
+        while (el && el !== document.body) {
+          var cls = el.className || '';
+          if (typeof cls === 'string'
+              && /rounded-(xl|2xl|3xl)/.test(cls)
+              && /shadow/.test(cls)
+              && el.children.length >= 2) {
+            return el;
+          }
+          el = el.parentElement;
+        }
+        return null;
+      }
+
+      function injectTrustLines(root) {
+        // Capture screen: anchor on the file input itself.
+        var fileInputs = root.querySelectorAll
+          ? root.querySelectorAll('input[type="file"]')
+          : [];
+        fileInputs.forEach(function (inp) {
+          var card = findCard(inp);
+          if (!card) return;
+          if (card.querySelector('.bli-trust-line[data-where="capture"]')) return;
+          var line = document.createElement('p');
+          line.className = 'bli-trust-line';
+          line.setAttribute('data-where', 'capture');
+          line.innerHTML = LOCK_SVG + '<span>Your photos stay on your device. We use AI only to identify items — we never store, share, or sell your inventory.</span>';
+          card.appendChild(line);
+        });
+
+        // Customer details screen: anchor on the "Start Inventory" button.
+        var startBtns = [].slice.call(root.querySelectorAll ? root.querySelectorAll('button') : [])
+          .filter(function (b) { return /Start Inventory|Next|Continue/i.test(b.textContent || ''); });
+        startBtns.forEach(function (btn) {
+          var card = findCard(btn);
+          if (!card) return;
+          if (card.querySelector('.bli-trust-line[data-where="details"]')) return;
+          // Sanity check: card must contain a text input (the name field)
+          if (!card.querySelector('input[type="text"], input:not([type])')) return;
+          var line = document.createElement('p');
+          line.className = 'bli-trust-line';
+          line.setAttribute('data-where', 'details');
+          line.innerHTML = LOCK_SVG + '<span>Saved on your device. We never sell your information.</span>';
+          card.appendChild(line);
+        });
+      }
+
+      function start() {
+        injectTrustLines(document);
+        var mo = new MutationObserver(function () { injectTrustLines(document); });
+        mo.observe(document.body, { childList: true, subtree: true });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function () { setTimeout(start, 50); });
+      } else {
+        setTimeout(start, 50);
+      }
+    })();
+  </script>
 </head>
   <body class="bg-slate-50 text-slate-900 font-sans">
     <div id="root"></div>
