@@ -95,6 +95,42 @@
         color: #f59e0b !important;
       }
 
+      /* ===== Typography polish =====
+         Audited against 2025 mobile standards (Apple HIG 13pt floor,
+         Material 12sp floor, 16-18px body). Two real fixes. */
+
+      /* 1. Stepper labels were text-[10px] on mobile — below Apple
+            HIG 13pt minimum. Bump to 13px / line-height 16. The
+            sm:text-sm breakpoint (14px @ 640px+) is fine. */
+      p[class*="text-[10px]"] {
+        font-size: 13px !important;
+        line-height: 16px !important;
+        letter-spacing: 0.005em;
+      }
+
+      /* 2. In-card section headings ("Welcome to Your Home Check-up",
+            "Living Room", etc.) were 24px / text-2xl, which feels
+            small next to the 36px hero. Bump to 28px on mobile so
+            the visual hierarchy is hero > section > body, not
+            hero >> section. Only targets headings inside <main> so
+            the hero h2 outside main is unaffected. */
+      @media (max-width: 640px) {
+        main h1, main h2, main h3 {
+          font-size: 1.75rem !important;     /* 28px */
+          line-height: 2.125rem !important;  /* 34px */
+        }
+        /* Don't bump inline H3s that are caption-style (PHOTO TIP,
+           Agent's Note, etc.) — they should stay small. */
+        main h3.text-sm,
+        main h3.text-base,
+        main h3[class*="text-xs"],
+        main h3[class*="text-sm"],
+        main h3[class*="text-base"] {
+          font-size: 1rem !important;
+          line-height: 1.5rem !important;
+        }
+      }
+
       /* Trust line injected by the script below. Forced full-width
          so it never gets sucked into a parent flex row next to a CTA. */
       .bli-trust-line {
