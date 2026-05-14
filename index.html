@@ -58,6 +58,43 @@
       .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0); }
       .safe-top    { padding-top: env(safe-area-inset-top, 0); }
 
+      /* ===== Room tile polish =====
+         The bundle's unselected room tile is `bg-white border-slate-100`
+         (white on barely-visible gray, gray icon). That reads as a
+         placeholder, not a tappable choice. Add a subtle navy gradient
+         + visible border + navy icon so unselected tiles look like
+         real cards. Selected state is unchanged. */
+      button.bg-white.border-slate-100[class*="aspect-square"] {
+        background: linear-gradient(140deg, #ffffff 0%, #f0f6fd 60%, #e6effa 100%) !important;
+        border-color: #b8d0ec !important;
+        box-shadow:
+          0 4px 14px -4px rgba(0, 63, 135, 0.12),
+          0 1px 2px rgba(0, 63, 135, 0.06),
+          inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+      }
+      button.bg-white.border-slate-100[class*="aspect-square"] svg {
+        color: #0076d3 !important;
+      }
+      button.bg-white.border-slate-100[class*="aspect-square"]:hover,
+      button.bg-white.border-slate-100[class*="aspect-square"]:focus-visible {
+        background: linear-gradient(140deg, #ffffff 0%, #cce0f5 100%) !important;
+        border-color: #3383d7 !important;
+        box-shadow:
+          0 10px 20px -6px rgba(0, 63, 135, 0.22),
+          0 2px 4px rgba(0, 63, 135, 0.08) !important;
+      }
+
+      /* Custom Room "+" tile uses a dashed border — give it more
+         visual weight too. */
+      button[class*="border-dashed"][class*="aspect-square"] {
+        background: #f8fafc !important;
+        border-color: #fbbf24 !important;
+        border-width: 2px !important;
+      }
+      button[class*="border-dashed"][class*="aspect-square"] svg {
+        color: #f59e0b !important;
+      }
+
       /* Trust line injected by the script below. Forced full-width
          so it never gets sucked into a parent flex row next to a CTA. */
       .bli-trust-line {
@@ -145,8 +182,46 @@
         });
       }
 
+      // Scroll-to-top on screen transitions. The React app swaps screens
+      // in place (no URL change), so the browser keeps the previous
+      // scroll position — landing the user mid-page on the next screen.
+      // This delegated click handler fires window.scrollTo(0) shortly
+      // after any button that is known to advance / change screens.
+      // Normalize apostrophes (curly U+2019, U+02BC, etc.) to straight
+      // before regex matching, so "Let's" vs "Let’s" both hit.
+      function normalize(s) {
+        return s.replace(/[‘’ʼ❛❜]/g, "'").trim();
+      }
+      var SCREEN_CHANGE_RE = new RegExp(
+        '^(' +
+          "Let's Start Inventory|Lets Start Inventory|" +
+          'Living Room|Kitchen|Master Bedroom|Bathroom|Office|Dining Room|' +
+          'Garage|Den|Basement|Attic|Custom Room|Add a Custom Room|Add Room|' +
+          'Back to Rooms|Back to All Rooms|Back to Inventory|' +
+          'Generate Final Report|Go Back & Add Items|Go Back and Add Items|' +
+          'View Report|See Report|Continue|Next' +
+        ')$', 'i');
+
+      function bindScrollToTop() {
+        if (bindScrollToTop._bound) return;
+        bindScrollToTop._bound = true;
+        document.addEventListener('click', function (e) {
+          var btn = e.target.closest('button, a');
+          if (!btn) return;
+          var text = normalize(btn.innerText || btn.textContent || '');
+          if (!text) return;
+          if (SCREEN_CHANGE_RE.test(text)) {
+            // Let React finish its render, then scroll.
+            setTimeout(function () {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 60);
+          }
+        }, true);
+      }
+
       function start() {
         injectTrustLines(document);
+        bindScrollToTop();
         var mo = new MutationObserver(function () { injectTrustLines(document); });
         mo.observe(document.body, { childList: true, subtree: true });
       }
