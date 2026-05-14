@@ -43,6 +43,23 @@
       }
     </script>
     <style>
+      :root {
+        --bli-navy: #003f87;
+        --bli-navy-dark: #002659;
+        --bli-blue: #0076d3;
+        --bli-blue-soft: #e6effa;
+        --bli-gold: #fbbf24;
+        --bli-gold-soft: #fff8e6;
+        --bli-success: #047857;
+        --bli-warning: #b45309;
+        --bli-danger: #b91c1c;
+        --bli-ink: #0f172a;
+        --bli-muted: #475569;
+        --bli-border: #bfdbfe;
+        --bli-surface: #ffffff;
+        --bli-page: #f8fafc;
+      }
+
       @keyframes fadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
@@ -139,10 +156,11 @@
         gap: 0.5rem;
         font-size: 0.8125rem;
         line-height: 1.4;
-        color: #475569;
+        color: var(--bli-muted);
         margin-top: 0.75rem;
         padding: 0.625rem 0.75rem;
-        background: #f1f5f9;
+        background: var(--bli-blue-soft);
+        border: 1px solid #cce0f5;
         border-radius: 0.5rem;
         width: 100%;
         flex: 0 0 100%;
@@ -152,7 +170,270 @@
         flex-shrink: 0;
         width: 1rem;
         height: 1rem;
-        color: #0076d3;
+        color: var(--bli-blue);
+      }
+
+      /* ===== Mobile-first color and usability pass =====
+         These classes are applied by the small script below because the
+         React source is committed as a compiled bundle. */
+      .bli-primary-action,
+      .bli-secondary-action,
+      .bli-danger-action {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+
+      .bli-primary-action {
+        min-height: 56px !important;
+        border-radius: 0.875rem !important;
+        background: linear-gradient(135deg, var(--bli-navy) 0%, var(--bli-blue) 100%) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.14) !important;
+        font-size: 1.0625rem !important;
+        line-height: 1.25rem !important;
+        font-weight: 800 !important;
+        box-shadow: 0 10px 24px rgba(0, 63, 135, 0.28) !important;
+      }
+      .bli-primary-action:hover,
+      .bli-primary-action:focus-visible {
+        background: linear-gradient(135deg, var(--bli-navy-dark) 0%, var(--bli-navy) 100%) !important;
+        outline: 3px solid rgba(0, 118, 211, 0.25) !important;
+        outline-offset: 2px !important;
+      }
+      .bli-primary-action:disabled {
+        background: #dbe4f0 !important;
+        color: #8a9ab0 !important;
+        border-color: #dbe4f0 !important;
+        box-shadow: none !important;
+      }
+
+      .bli-secondary-action {
+        min-height: 52px !important;
+        border-radius: 0.875rem !important;
+        background: #ffffff !important;
+        color: var(--bli-navy) !important;
+        border: 2px solid #99c1eb !important;
+        font-size: 1rem !important;
+        font-weight: 800 !important;
+        box-shadow: 0 4px 12px rgba(0, 63, 135, 0.08) !important;
+      }
+      .bli-secondary-action:hover,
+      .bli-secondary-action:focus-visible {
+        background: #eef6ff !important;
+        border-color: var(--bli-blue) !important;
+        outline: 3px solid rgba(0, 118, 211, 0.18) !important;
+        outline-offset: 2px !important;
+      }
+
+      .bli-danger-action {
+        background: #fff1f2 !important;
+        color: var(--bli-danger) !important;
+        border: 1px solid #fecdd3 !important;
+        box-shadow: none !important;
+      }
+      .bli-danger-action:hover,
+      .bli-danger-action:focus-visible {
+        background: #ffe4e6 !important;
+        outline: 3px solid rgba(185, 28, 28, 0.16) !important;
+        outline-offset: 2px !important;
+      }
+
+      .bli-tip-card {
+        background: var(--bli-gold-soft) !important;
+        border-color: #f6d365 !important;
+        color: #7c2d12 !important;
+        box-shadow: 0 6px 16px rgba(180, 83, 9, 0.08) !important;
+      }
+      .bli-tip-card h3,
+      .bli-tip-card h4,
+      .bli-tip-card p {
+        color: inherit !important;
+      }
+
+      .bli-room-status {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+      }
+      .bli-status-chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 32px;
+        padding: 0.35rem 0.65rem;
+        border-radius: 999px;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        color: #065f46;
+        font-size: 0.8125rem;
+        font-weight: 800;
+        line-height: 1.1;
+      }
+      .bli-status-chip[data-tone="info"] {
+        background: var(--bli-blue-soft);
+        border-color: #cce0f5;
+        color: var(--bli-navy);
+      }
+      .bli-status-chip[data-tone="warn"] {
+        background: #fffbeb;
+        border-color: #fde68a;
+        color: var(--bli-warning);
+      }
+
+      .bli-empty-help {
+        display: block;
+        margin-top: 0.5rem;
+        color: var(--bli-muted);
+        font-size: 0.9375rem;
+        line-height: 1.45;
+      }
+
+      .bli-report-action svg {
+        width: 1.25rem !important;
+        height: 1.25rem !important;
+        flex: 0 0 auto !important;
+      }
+
+      .bli-segmented-tabs {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+        gap: 0.35rem !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        overflow-x: hidden !important;
+        border: 1px solid var(--bli-border) !important;
+        border-radius: 1rem !important;
+        background: #eef6ff !important;
+        padding: 0.25rem !important;
+      }
+      .bli-segmented-tabs::-webkit-scrollbar {
+        display: none !important;
+      }
+      .bli-segmented-tabs > button {
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 46px !important;
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        border-radius: 0.75rem !important;
+        border: 0 !important;
+        font-size: 0.875rem !important;
+        line-height: 1.1rem !important;
+        font-weight: 800 !important;
+        color: var(--bli-navy) !important;
+      }
+      .bli-segmented-tabs > button * {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+      }
+
+      @media (max-width: 640px) {
+        html,
+        body,
+        #root {
+          max-width: 100%;
+          overflow-x: hidden;
+        }
+        body {
+          background: var(--bli-page);
+          color: var(--bli-ink);
+        }
+        main {
+          max-width: 100%;
+        }
+        main p,
+        main label,
+        main input,
+        main select,
+        main textarea {
+          font-size: 1rem !important;
+          line-height: 1.55 !important;
+        }
+        main input,
+        main select,
+        main textarea {
+          min-height: 48px;
+          border-radius: 0.75rem !important;
+        }
+        main textarea {
+          min-height: 96px;
+        }
+
+        /* The room/category tab row should look like a segmented
+           control, not a tiny horizontal-scroll strip. */
+        main div.overflow-x-auto:has(> nav) {
+          overflow: visible !important;
+          overflow-x: visible !important;
+          border-bottom: 0 !important;
+          margin-bottom: 1.5rem !important;
+        }
+        main nav.\-mb-px {
+          display: grid !important;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+          gap: 0.35rem !important;
+          min-width: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          margin-bottom: 0 !important;
+          overflow: hidden !important;
+          overflow-x: hidden !important;
+          border: 1px solid var(--bli-border) !important;
+          border-radius: 1rem !important;
+          background: #eef6ff !important;
+          padding: 0.25rem !important;
+        }
+        main nav.\-mb-px > button {
+          min-width: 0 !important;
+          width: 100% !important;
+          max-width: 100% !important;
+          min-height: 46px !important;
+          padding: 0.5rem !important;
+          white-space: normal !important;
+          overflow: visible !important;
+          text-overflow: clip !important;
+          border-radius: 0.75rem !important;
+          border: 0 !important;
+          font-size: 0.875rem !important;
+          line-height: 1.1rem !important;
+          font-weight: 800 !important;
+          color: var(--bli-navy) !important;
+        }
+        main nav.\-mb-px > button[class*="border-primary"],
+        main nav.\-mb-px > button[class*="text-primary"],
+        .bli-segmented-tabs > button[aria-selected="true"],
+        .bli-segmented-tabs > button[class*="border-primary"],
+        .bli-segmented-tabs > button[class*="text-primary"] {
+          background: #ffffff !important;
+          box-shadow: 0 2px 8px rgba(0, 63, 135, 0.12) !important;
+        }
+
+        button.bg-white.border-slate-100[class*="aspect-square"] {
+          border-width: 2px !important;
+          border-radius: 1rem !important;
+        }
+        button[class*="aspect-square"][class*="bg-primary"],
+        button[class*="aspect-square"][class*="from-primary"] {
+          background: linear-gradient(145deg, var(--bli-navy) 0%, var(--bli-blue) 100%) !important;
+          border-color: var(--bli-navy) !important;
+          color: #ffffff !important;
+        }
+
+        .bli-mobile-sticky {
+          position: sticky !important;
+          bottom: max(0.75rem, env(safe-area-inset-bottom, 0px)) !important;
+          z-index: 30 !important;
+        }
+        .bli-report-action {
+          min-height: 54px !important;
+          justify-content: center !important;
+          gap: 0.5rem !important;
+        }
       }
     </style>
 
@@ -238,6 +519,112 @@
           'View Report|See Report|Continue|Next' +
         ')$', 'i');
 
+      normalize = function (s) {
+        return (s || '').replace(/[\u2018\u2019\u02bc\u275b\u275c]/g, "'").replace(/\s+/g, ' ').trim();
+      };
+
+      function enhanceButtons(root) {
+        var els = [].slice.call(root.querySelectorAll ? root.querySelectorAll('button, label') : []);
+        els.forEach(function (el) {
+          var text = normalize(el.innerText || el.textContent || '');
+          if (!text) {
+            if (el.tagName === 'BUTTON' && !el.getAttribute('aria-label')) {
+              el.setAttribute('aria-label', 'Item action');
+            }
+            return;
+          }
+
+          if (/^Delete$/i.test(text)) {
+            el.classList.add('bli-danger-action');
+            if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', 'Delete this room');
+            return;
+          }
+
+          if (/^(Upload from Gallery|Back to Rooms|Back to All Rooms|Back to Inventory|Cancel|Email Report)$/i.test(text)) {
+            el.classList.add('bli-secondary-action');
+            if (/Email Report/i.test(text)) el.classList.add('bli-report-action');
+            return;
+          }
+
+          if (/^(Let's Start Inventory|Lets Start Inventory|Take Photo|Create List with AI|Update List with AI|Save|Generate Final Report|Download \/ Print|Go Back & Add Items|Go Back and Add Items)$/i.test(text)) {
+            el.classList.add('bli-primary-action');
+            if (/^(Let's Start Inventory|Lets Start Inventory|Take Photo|Create List with AI|Update List with AI|Generate Final Report)$/i.test(text)) {
+              el.classList.add('bli-mobile-sticky');
+            }
+            if (/Download \/ Print/i.test(text)) el.classList.add('bli-report-action');
+          }
+        });
+      }
+
+      function enhanceTipCards(root) {
+        var headings = [].slice.call(root.querySelectorAll ? root.querySelectorAll('main h3, main h4') : []);
+        headings.forEach(function (heading) {
+          var text = normalize(heading.textContent || '');
+          if (!/(Photo Tip|Agent's Note|Agents Note)/i.test(text)) return;
+          var card = findCard(heading);
+          if (card) card.classList.add('bli-tip-card');
+        });
+      }
+
+      function injectRoomStatus(root) {
+        var roomRe = /^(Living Room|Kitchen|Master Bedroom|Bathroom|Office|Dining Room|Garage|Den|Basement|Attic|Custom Room)$/i;
+        var headings = [].slice.call(root.querySelectorAll ? root.querySelectorAll('main h2') : []);
+        headings.forEach(function (heading) {
+          var text = normalize(heading.textContent || '');
+          if (!roomRe.test(text)) return;
+          var host = heading.parentElement;
+          if (!host || host.querySelector('.bli-room-status')) return;
+
+          var status = document.createElement('div');
+          status.className = 'bli-room-status';
+          status.setAttribute('aria-label', 'Room inventory status');
+          status.innerHTML =
+            '<span class="bli-status-chip" data-tone="info">Saved locally</span>' +
+            '<span class="bli-status-chip" data-tone="warn">Add photos first</span>' +
+            '<span class="bli-status-chip">Review items anytime</span>';
+          host.appendChild(status);
+        });
+      }
+
+      function enhanceEmptyStates(root) {
+        var nodes = [].slice.call(root.querySelectorAll ? root.querySelectorAll('main p') : []);
+        nodes.forEach(function (p) {
+          var text = normalize(p.textContent || '');
+          if (!/No inventory items yet/i.test(text)) return;
+          if (p.nextElementSibling && p.nextElementSibling.classList && p.nextElementSibling.classList.contains('bli-empty-help')) return;
+          var help = document.createElement('span');
+          help.className = 'bli-empty-help';
+          help.textContent = 'Start with a wide room photo, then add close-ups of valuable items like electronics, jewelry, tools, and furniture.';
+          p.insertAdjacentElement('afterend', help);
+        });
+      }
+
+      function enhanceSegmentedTabs(root) {
+        var buttons = [].slice.call(root.querySelectorAll ? root.querySelectorAll('main button') : []);
+        var roomTab = buttons.find(function (btn) {
+          return /^(Inventory by Room|Rooms)$/i.test(normalize(btn.textContent || ''));
+        });
+        var specialtyTab = buttons.find(function (btn) {
+          return /^(Specialty Collections|Specialty)$/i.test(normalize(btn.textContent || ''));
+        });
+        if (!roomTab || !specialtyTab || roomTab.parentElement !== specialtyTab.parentElement) return;
+        roomTab.setAttribute('aria-label', 'Inventory by Room');
+        specialtyTab.setAttribute('aria-label', 'Specialty Collections');
+        if (window.matchMedia && window.matchMedia('(max-width: 640px)').matches) {
+          if (normalize(roomTab.textContent || '') !== 'Rooms') roomTab.textContent = 'Rooms';
+          if (normalize(specialtyTab.textContent || '') !== 'Specialty') specialtyTab.textContent = 'Specialty';
+        }
+        roomTab.parentElement.classList.add('bli-segmented-tabs');
+      }
+
+      function enhanceMobileUx(root) {
+        enhanceButtons(root);
+        enhanceTipCards(root);
+        injectRoomStatus(root);
+        enhanceEmptyStates(root);
+        enhanceSegmentedTabs(root);
+      }
+
       function bindScrollToTop() {
         if (bindScrollToTop._bound) return;
         bindScrollToTop._bound = true;
@@ -257,8 +644,12 @@
 
       function start() {
         injectTrustLines(document);
+        enhanceMobileUx(document);
         bindScrollToTop();
-        var mo = new MutationObserver(function () { injectTrustLines(document); });
+        var mo = new MutationObserver(function () {
+          injectTrustLines(document);
+          enhanceMobileUx(document);
+        });
         mo.observe(document.body, { childList: true, subtree: true });
       }
 
