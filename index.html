@@ -1301,23 +1301,8 @@
       }
 
       function injectRoomStatus(root) {
-        var roomRe = /^(Living Room|Kitchen|Master Bedroom|Bathroom|Office|Dining Room|Garage|Den|Basement|Attic|Custom Room)$/i;
-        var headings = [].slice.call(root.querySelectorAll ? root.querySelectorAll('main h2') : []);
-        headings.forEach(function (heading) {
-          var text = normalize(heading.textContent || '');
-          if (!roomRe.test(text)) return;
-          var host = heading.parentElement;
-          if (!host || host.querySelector('.bli-room-status')) return;
-
-          var status = document.createElement('div');
-          status.className = 'bli-room-status';
-          status.setAttribute('aria-label', 'Room inventory status');
-          status.innerHTML =
-            '<span class="bli-status-chip" data-tone="info">Saved locally</span>' +
-            '<span class="bli-status-chip" data-tone="warn">Add photos first</span>' +
-            '<span class="bli-status-chip">Review anytime</span>';
-          host.appendChild(status);
-        });
+        [].slice.call(root.querySelectorAll ? root.querySelectorAll('.bli-room-status') : [])
+          .forEach(function (status) { status.remove(); });
       }
 
       function enhanceEmptyStates(root) {
