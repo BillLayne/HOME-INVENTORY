@@ -753,6 +753,108 @@
         color: #061a37 !important;
       }
 
+      .bli-workflow-card[data-screen="capture"] .bli-room-photo-tip {
+        display: none !important;
+      }
+
+      .bli-ai-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+        background: rgba(4, 19, 42, 0.72);
+        backdrop-filter: blur(12px);
+      }
+
+      .bli-ai-overlay[aria-hidden="false"] {
+        display: flex;
+      }
+
+      .bli-ai-overlay__panel {
+        width: min(100%, 430px);
+        border-radius: 1.35rem;
+        padding: 1.35rem;
+        background:
+          radial-gradient(circle at 10% 0%, rgba(251, 191, 36, 0.16), transparent 12rem),
+          linear-gradient(180deg, #ffffff 0%, #f6faff 100%);
+        border: 1px solid rgba(191, 219, 254, 0.9);
+        box-shadow: 0 28px 72px rgba(0, 0, 0, 0.28);
+        color: #061a37;
+      }
+
+      .bli-ai-overlay__mark {
+        width: 58px;
+        height: 58px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #e8f1ff;
+        color: var(--bli-blue);
+        margin-bottom: 1rem;
+      }
+
+      .bli-ai-overlay__mark svg {
+        width: 1.9rem;
+        height: 1.9rem;
+        animation: bliPulse 1.4s ease-in-out infinite;
+      }
+
+      .bli-ai-overlay h2 {
+        margin: 0;
+        font-size: 1.55rem;
+        line-height: 1.15;
+        font-weight: 800;
+      }
+
+      .bli-ai-overlay p {
+        margin: 0.65rem 0 0;
+        color: #334155;
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+
+      .bli-ai-overlay__tip {
+        margin-top: 1rem !important;
+        padding: 0.9rem 1rem;
+        border-radius: 1rem;
+        background: #fff8e6;
+        border: 1px solid #f6d365;
+        color: #7c2d12 !important;
+        font-weight: 700;
+      }
+
+      .bli-ai-overlay__bar {
+        height: 8px;
+        margin-top: 1.15rem;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #dbeafe;
+      }
+
+      .bli-ai-overlay__bar span {
+        display: block;
+        width: 42%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--bli-blue), #2563eb, var(--bli-gold));
+        animation: bliLoadingSlide 1.35s ease-in-out infinite;
+      }
+
+      @keyframes bliPulse {
+        0%, 100% { transform: scale(1); opacity: 0.9; }
+        50% { transform: scale(1.08); opacity: 1; }
+      }
+
+      @keyframes bliLoadingSlide {
+        0% { transform: translateX(-110%); }
+        55% { transform: translateX(80%); }
+        100% { transform: translateX(245%); }
+      }
+
       .bli-workflow-card button[class*="aspect-square"] {
         border-radius: 1.15rem !important;
         transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease !important;
@@ -875,6 +977,36 @@
           min-height: 54px !important;
           justify-content: center !important;
           gap: 0.5rem !important;
+        }
+
+        .bli-room-status {
+          gap: 0.35rem !important;
+          margin-top: 0.55rem !important;
+        }
+
+        .bli-status-chip {
+          min-height: 28px !important;
+          padding: 0.28rem 0.52rem !important;
+          font-size: 0.72rem !important;
+          line-height: 1 !important;
+        }
+
+        .bli-workflow-card[data-screen="capture"] .bli-screen-card {
+          padding: 1rem !important;
+        }
+
+        .bli-workflow-card[data-screen="capture"] .bli-photo-step-card {
+          margin-top: 0.85rem !important;
+        }
+
+        .bli-workflow-card[data-screen="capture"] label.bli-primary-action {
+          min-height: 64px !important;
+          font-size: 1.15rem !important;
+        }
+
+        .bli-workflow-card[data-screen="capture"] label.bli-secondary-action {
+          min-height: 52px !important;
+          font-size: 0.98rem !important;
         }
 
         .inventory-app-anchor #root > div > div[class*="-mt-20"] {
@@ -1183,7 +1315,7 @@
           status.innerHTML =
             '<span class="bli-status-chip" data-tone="info">Saved locally</span>' +
             '<span class="bli-status-chip" data-tone="warn">Add photos first</span>' +
-            '<span class="bli-status-chip">Review items anytime</span>';
+            '<span class="bli-status-chip">Review anytime</span>';
           host.appendChild(status);
         });
       }
@@ -1269,8 +1401,90 @@
           var text = normalize(heading.textContent || '');
           if (!/(Step 1|Step 2|Take Photos|Your Item List|Photo Tip)/i.test(text)) return;
           var card = findCard(heading);
-          if (card) card.classList.add('bli-photo-step-card');
+          if (card) {
+            card.classList.add('bli-photo-step-card');
+            if (/Photo Tip/i.test(text)) card.classList.add('bli-room-photo-tip');
+          }
         });
+      }
+
+      var AI_TIPS = [
+        'Tip: one wide room photo plus a few close-ups works best.',
+        'Tip: open closets or drawers if you want clothing or linens included.',
+        'Tip: take a close-up of electronics, tools, jewelry, and collectibles.',
+        'Tip: brand names and model numbers help improve the item list.',
+        'Privacy note: your photos stay on your device; AI only helps identify items.'
+      ];
+      var aiOverlayState = { index: 0, startedAt: 0, timer: null, monitor: null };
+
+      function ensureAiOverlay() {
+        var overlay = document.getElementById('bliAiOverlay');
+        if (overlay) return overlay;
+        overlay = document.createElement('div');
+        overlay.id = 'bliAiOverlay';
+        overlay.className = 'bli-ai-overlay';
+        overlay.setAttribute('aria-hidden', 'true');
+        overlay.setAttribute('role', 'status');
+        overlay.setAttribute('aria-live', 'polite');
+        overlay.innerHTML =
+          '<div class="bli-ai-overlay__panel">' +
+            '<div class="bli-ai-overlay__mark" aria-hidden="true">' +
+              '<svg viewBox="0 0 24 24" fill="none">' +
+                '<path d="M12 2l1.5 5.2L19 9l-5.5 1.8L12 16l-1.5-5.2L5 9l5.5-1.8L12 2z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/>' +
+                '<path d="M19 14l.8 2.7 2.7.8-2.7.8L19 21l-.8-2.7-2.7-.8 2.7-.8L19 14z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>' +
+              '</svg>' +
+            '</div>' +
+            '<h2>Building your inventory list...</h2>' +
+            '<p>AI is reviewing the room photos and turning them into an item list.</p>' +
+            '<p class="bli-ai-overlay__tip" id="bliAiTip">' + AI_TIPS[0] + '</p>' +
+            '<div class="bli-ai-overlay__bar" aria-hidden="true"><span></span></div>' +
+          '</div>';
+        document.body.appendChild(overlay);
+        return overlay;
+      }
+
+      function hideAiTipOverlay() {
+        var overlay = document.getElementById('bliAiOverlay');
+        if (!overlay) return;
+        overlay.setAttribute('aria-hidden', 'true');
+        if (aiOverlayState.timer) clearInterval(aiOverlayState.timer);
+        if (aiOverlayState.monitor) clearInterval(aiOverlayState.monitor);
+        aiOverlayState.timer = null;
+        aiOverlayState.monitor = null;
+      }
+
+      function aiLooksBusy() {
+        var app = document.getElementById('inventory-app');
+        var text = app ? (app.innerText || '') : (document.body.innerText || '');
+        return /Analyzing\.\.\.|Analyzing|Processing/i.test(text);
+      }
+
+      function showAiTipOverlay() {
+        var overlay = ensureAiOverlay();
+        var tip = document.getElementById('bliAiTip');
+        aiOverlayState.index = 0;
+        aiOverlayState.startedAt = Date.now();
+        if (tip) tip.textContent = AI_TIPS[0];
+        overlay.setAttribute('aria-hidden', 'false');
+        if (aiOverlayState.timer) clearInterval(aiOverlayState.timer);
+        aiOverlayState.timer = setInterval(function () {
+          aiOverlayState.index = (aiOverlayState.index + 1) % AI_TIPS.length;
+          var currentTip = document.getElementById('bliAiTip');
+          if (currentTip) currentTip.textContent = AI_TIPS[aiOverlayState.index];
+        }, 2600);
+        if (aiOverlayState.monitor) clearInterval(aiOverlayState.monitor);
+        aiOverlayState.monitor = setInterval(function () {
+          var elapsed = Date.now() - aiOverlayState.startedAt;
+          if (elapsed > 1200 && !aiLooksBusy()) hideAiTipOverlay();
+          if (elapsed > 90000) hideAiTipOverlay();
+        }, 500);
+      }
+
+      function syncAiTipOverlay() {
+        var overlay = document.getElementById('bliAiOverlay');
+        if (!overlay || overlay.getAttribute('aria-hidden') === 'true') return;
+        var elapsed = Date.now() - aiOverlayState.startedAt;
+        if (elapsed > 1200 && !aiLooksBusy()) hideAiTipOverlay();
       }
 
       function enhanceMobileUx(root) {
@@ -1298,6 +1512,9 @@
               window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
             }, 60);
           }
+          if (/^(Create List with AI|Update List with AI)$/i.test(text) && !btn.disabled && btn.getAttribute('aria-disabled') !== 'true') {
+            showAiTipOverlay();
+          }
         }, true);
       }
 
@@ -1308,6 +1525,7 @@
         var mo = new MutationObserver(function () {
           injectTrustLines(document);
           enhanceMobileUx(document);
+          syncAiTipOverlay();
         });
         mo.observe(document.body, { childList: true, subtree: true });
       }
