@@ -769,6 +769,11 @@
         backdrop-filter: blur(12px);
       }
 
+      html.bli-ai-overlay-open,
+      html.bli-ai-overlay-open body {
+        overflow: hidden;
+      }
+
       .bli-ai-overlay[aria-hidden="false"] {
         display: flex;
       }
@@ -1400,6 +1405,7 @@
         'Tip: brand names and model numbers help improve the item list.',
         'Privacy note: your photos stay on your device; AI only helps identify items.'
       ];
+      var AI_OVERLAY_MIN_MS = 3200;
       var aiOverlayState = { index: 0, startedAt: 0, timer: null, monitor: null };
 
       function ensureAiOverlay() {
@@ -1419,8 +1425,8 @@
                 '<path d="M19 14l.8 2.7 2.7.8-2.7.8L19 21l-.8-2.7-2.7-.8 2.7-.8L19 14z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>' +
               '</svg>' +
             '</div>' +
-            '<h2>Building your inventory list...</h2>' +
-            '<p>AI is reviewing the room photos and turning them into an item list.</p>' +
+            '<h2>Please wait while AI reviews your photos</h2>' +
+            '<p>We are parsing the room photo and turning it into a simple item list.</p>' +
             '<p class="bli-ai-overlay__tip" id="bliAiTip">' + AI_TIPS[0] + '</p>' +
             '<div class="bli-ai-overlay__bar" aria-hidden="true"><span></span></div>' +
           '</div>';
@@ -1432,6 +1438,7 @@
         var overlay = document.getElementById('bliAiOverlay');
         if (!overlay) return;
         overlay.setAttribute('aria-hidden', 'true');
+        document.documentElement.classList.remove('bli-ai-overlay-open');
         if (aiOverlayState.timer) clearInterval(aiOverlayState.timer);
         if (aiOverlayState.monitor) clearInterval(aiOverlayState.monitor);
         aiOverlayState.timer = null;
@@ -1450,6 +1457,7 @@
         aiOverlayState.index = 0;
         aiOverlayState.startedAt = Date.now();
         if (tip) tip.textContent = AI_TIPS[0];
+        document.documentElement.classList.add('bli-ai-overlay-open');
         overlay.setAttribute('aria-hidden', 'false');
         if (aiOverlayState.timer) clearInterval(aiOverlayState.timer);
         aiOverlayState.timer = setInterval(function () {
@@ -1460,7 +1468,7 @@
         if (aiOverlayState.monitor) clearInterval(aiOverlayState.monitor);
         aiOverlayState.monitor = setInterval(function () {
           var elapsed = Date.now() - aiOverlayState.startedAt;
-          if (elapsed > 1200 && !aiLooksBusy()) hideAiTipOverlay();
+          if (elapsed > AI_OVERLAY_MIN_MS && !aiLooksBusy()) hideAiTipOverlay();
           if (elapsed > 90000) hideAiTipOverlay();
         }, 500);
       }
@@ -1469,7 +1477,7 @@
         var overlay = document.getElementById('bliAiOverlay');
         if (!overlay || overlay.getAttribute('aria-hidden') === 'true') return;
         var elapsed = Date.now() - aiOverlayState.startedAt;
-        if (elapsed > 1200 && !aiLooksBusy()) hideAiTipOverlay();
+        if (elapsed > AI_OVERLAY_MIN_MS && !aiLooksBusy()) hideAiTipOverlay();
       }
 
       function enhanceMobileUx(root) {
