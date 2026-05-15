@@ -333,6 +333,444 @@
         text-overflow: clip !important;
       }
 
+      /* ===== Standalone home-inventory landing hero ===== */
+      .inventory-landing,
+      .inventory-landing * {
+        box-sizing: border-box;
+      }
+
+      .inventory-landing {
+        background: #eef5ff;
+        font-family: "Outfit", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #ffffff;
+      }
+
+      .home-hero {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        min-height: 660px;
+        background:
+          radial-gradient(circle at 18% 54%, rgba(0, 118, 211, 0.22), transparent 25%),
+          linear-gradient(112deg, #061a37 0%, #071f44 38%, #0b2c5b 100%);
+      }
+
+      .home-hero::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 38rem;
+        height: 24rem;
+        background-image: radial-gradient(rgba(0, 118, 211, 0.24) 1px, transparent 1px);
+        background-size: 9px 9px;
+        opacity: 0.45;
+        mask-image: linear-gradient(20deg, #000 0%, transparent 70%);
+        z-index: -1;
+      }
+
+      .home-hero-backdrop {
+        position: absolute;
+        inset: 0 0 0 34%;
+        z-index: -2;
+      }
+
+      .home-hero-backdrop img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+      }
+
+      .home-hero-backdrop::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(90deg, #061a37 0%, rgba(6, 26, 55, 0.88) 12%, rgba(6, 26, 55, 0.42) 30%, rgba(6, 26, 55, 0.04) 52%),
+          linear-gradient(0deg, rgba(6, 26, 55, 0.2), rgba(6, 26, 55, 0));
+      }
+
+      .home-hero-inner {
+        width: min(100% - 2rem, 1530px);
+        min-height: 650px;
+        margin: 0 auto;
+        padding: clamp(1.6rem, 3vw, 3.6rem) 0 3.2rem;
+        display: grid;
+        grid-template-columns: minmax(360px, 0.42fr) minmax(0, 0.58fr);
+        align-items: center;
+      }
+
+      .home-hero-copy {
+        max-width: 590px;
+        padding-top: 0.5rem;
+      }
+
+      .home-brand-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        color: #dbeafe;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 1rem;
+        margin: 0 0.75rem 0.85rem 0;
+      }
+
+      .home-brand-link svg {
+        width: 2.25rem;
+        height: 2.25rem;
+        padding: 0.45rem;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #0076d3, #1d4ed8);
+        box-shadow: 0 12px 30px rgba(0, 118, 211, 0.28);
+      }
+
+      .home-ai-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        min-height: 40px;
+        padding: 0.55rem 1.1rem;
+        border-radius: 999px;
+        background: rgba(29, 78, 216, 0.54);
+        color: #eff6ff;
+        font-size: 0.92rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .home-ai-pill svg {
+        width: 1.1rem;
+        height: 1.1rem;
+        color: #fbbf24;
+      }
+
+      .home-hero h1 {
+        margin: 1.1rem 0 0;
+        max-width: 650px;
+        color: #ffffff;
+        font-size: clamp(2.8rem, 3.1vw, 3.25rem);
+        line-height: 1.04;
+        letter-spacing: 0;
+        font-weight: 800;
+      }
+
+      .home-hero h1 span {
+        display: block;
+        color: #fbbf24;
+      }
+
+      .home-hero-copy p {
+        max-width: 560px;
+        margin: 1.25rem 0 0;
+        color: #e5eefb;
+        font-size: clamp(1.05rem, 1.25vw, 1.18rem);
+        line-height: 1.55;
+      }
+
+      .home-hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 1.75rem;
+      }
+
+      .home-hero-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.65rem;
+        min-height: 60px;
+        padding: 0 1.55rem;
+        border-radius: 0.9rem;
+        text-decoration: none;
+        font-size: 1.05rem;
+        font-weight: 800;
+        transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+      }
+
+      .home-hero-btn svg {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+
+      .home-hero-btn:hover,
+      .home-hero-btn:focus-visible {
+        transform: translateY(-1px);
+        outline: 3px solid rgba(255, 255, 255, 0.22);
+        outline-offset: 3px;
+      }
+
+      .home-hero-btn--primary {
+        min-width: 270px;
+        color: #ffffff;
+        background: linear-gradient(135deg, #0076d3, #2563eb);
+        box-shadow: 0 18px 34px rgba(37, 99, 235, 0.36);
+      }
+
+      .home-hero-btn--secondary {
+        min-width: 196px;
+        color: #ffffff;
+        border: 2px solid rgba(255, 255, 255, 0.84);
+        background: rgba(6, 26, 55, 0.32);
+        backdrop-filter: blur(10px);
+      }
+
+      .home-hero-trust {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        margin-top: 1.25rem;
+        color: #ffffff;
+        font-size: 0.96rem;
+        line-height: 1.4;
+      }
+
+      .home-hero-trust svg {
+        width: 1.55rem;
+        height: 1.55rem;
+        flex: 0 0 auto;
+        color: #fbbf24;
+      }
+
+      .home-hero-trust strong {
+        color: #fbbf24;
+      }
+
+      .home-mobile-visual {
+        display: none;
+      }
+
+      .home-process-panel {
+        width: min(calc(100% - 2rem), 1530px);
+        margin: -2.2rem auto 0;
+        position: relative;
+        z-index: 3;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        overflow: hidden;
+        border-radius: 1.25rem 1.25rem 0 0;
+        background: rgba(255, 255, 255, 0.97);
+        color: #061a37;
+        box-shadow: 0 -4px 48px rgba(15, 23, 42, 0.12);
+      }
+
+      .home-process-step {
+        display: grid;
+        grid-template-columns: 88px 1fr;
+        align-items: center;
+        gap: 1.25rem;
+        min-height: 148px;
+        padding: 1.45rem 2.4rem;
+        position: relative;
+      }
+
+      .home-process-step + .home-process-step {
+        border-left: 1px solid #dbe5f2;
+      }
+
+      .home-process-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #e8f1ff;
+        color: #1d6fe8;
+      }
+
+      .home-process-icon svg {
+        width: 2.4rem;
+        height: 2.4rem;
+      }
+
+      .home-step-number {
+        position: absolute;
+        left: 7rem;
+        top: 2.2rem;
+        width: 1.65rem;
+        height: 1.65rem;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #2563eb;
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 0.85rem;
+        box-shadow: 0 8px 16px rgba(37, 99, 235, 0.26);
+      }
+
+      .home-process-step h2 {
+        margin: 0 0 0.55rem;
+        color: #061a37;
+        font-size: 1.35rem;
+        line-height: 1.18;
+        font-weight: 800;
+      }
+
+      .home-process-step p {
+        margin: 0;
+        color: #334155;
+        font-size: 1rem;
+        line-height: 1.45;
+      }
+
+      .inventory-app-anchor {
+        background: var(--bli-page);
+        scroll-margin-top: 1.25rem;
+      }
+
+      .inventory-app-anchor #root > div > nav,
+      .inventory-app-anchor #root > div > div[class*="from-slate-900"][class*="to-primary-900"] {
+        display: none !important;
+      }
+
+      .inventory-app-anchor #root > div > div[class*="-mt-20"] {
+        margin-top: 0 !important;
+        padding-top: 2rem !important;
+      }
+
+      .inventory-app-anchor #root > div {
+        background:
+          linear-gradient(180deg, #eef5ff 0%, #f8fbff 18rem, #f8fafc 100%) !important;
+        color: var(--bli-ink) !important;
+        min-height: auto !important;
+      }
+
+      .inventory-app-anchor .max-w-5xl {
+        max-width: 1120px !important;
+      }
+
+      .bli-progress-card {
+        border-radius: 1.35rem !important;
+        border: 1px solid rgba(191, 219, 254, 0.95) !important;
+        background: rgba(255, 255, 255, 0.96) !important;
+        box-shadow: 0 22px 54px rgba(15, 23, 42, 0.09) !important;
+        padding: 0.85rem !important;
+      }
+
+      .bli-progress-card > div {
+        background: transparent !important;
+        padding: 0.75rem !important;
+      }
+
+      .bli-progress-card [class*="rounded-full"] {
+        box-shadow: 0 8px 18px rgba(0, 63, 135, 0.14);
+      }
+
+      .bli-workflow-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 1.65rem !important;
+        border: 1px solid rgba(191, 219, 254, 0.95) !important;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
+        box-shadow: 0 24px 64px rgba(15, 23, 42, 0.1) !important;
+      }
+
+      .bli-workflow-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 6px;
+        background: linear-gradient(90deg, var(--bli-blue), #2563eb, var(--bli-gold));
+      }
+
+      .bli-workflow-card > div:first-child {
+        border-color: rgba(191, 219, 254, 0.85) !important;
+      }
+
+      .bli-workflow-card h2 {
+        color: #061a37 !important;
+        letter-spacing: 0 !important;
+      }
+
+      .bli-workflow-card p {
+        color: #334155;
+      }
+
+      .bli-workflow-card label {
+        color: #102a4f !important;
+        font-weight: 800 !important;
+      }
+
+      .bli-workflow-card input,
+      .bli-workflow-card textarea,
+      .bli-workflow-card select {
+        border: 2px solid #d7e7fb !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04) !important;
+      }
+
+      .bli-workflow-card input:focus,
+      .bli-workflow-card textarea:focus,
+      .bli-workflow-card select:focus {
+        border-color: var(--bli-blue) !important;
+        outline: 4px solid rgba(0, 118, 211, 0.16) !important;
+        outline-offset: 1px !important;
+        box-shadow: 0 10px 26px rgba(0, 63, 135, 0.1) !important;
+      }
+
+      .bli-workflow-card[data-screen="rooms"] {
+        background:
+          radial-gradient(circle at 100% 0%, rgba(0, 118, 211, 0.1), transparent 24rem),
+          linear-gradient(180deg, #ffffff 0%, #f7fbff 100%) !important;
+      }
+
+      .bli-workflow-card[data-screen="capture"] {
+        background:
+          radial-gradient(circle at 8% 0%, rgba(251, 191, 36, 0.11), transparent 18rem),
+          linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
+      }
+
+      .bli-workflow-card[data-screen="report"] {
+        background:
+          radial-gradient(circle at 92% 0%, rgba(4, 120, 87, 0.1), transparent 18rem),
+          linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
+      }
+
+      .bli-screen-card {
+        border-radius: 1.25rem !important;
+        border: 1px solid rgba(191, 219, 254, 0.86) !important;
+        background: rgba(255, 255, 255, 0.82) !important;
+        box-shadow: 0 14px 34px rgba(15, 23, 42, 0.07) !important;
+      }
+
+      .bli-photo-step-card {
+        border-radius: 1.35rem !important;
+        border: 1px solid rgba(191, 219, 254, 0.95) !important;
+        background: linear-gradient(180deg, #ffffff 0%, #f6faff 100%) !important;
+        box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08) !important;
+      }
+
+      .bli-photo-step-card h3,
+      .bli-photo-step-card h4 {
+        color: #061a37 !important;
+      }
+
+      .bli-workflow-card button[class*="aspect-square"] {
+        border-radius: 1.15rem !important;
+        transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease !important;
+      }
+
+      .bli-workflow-card button[class*="aspect-square"]:hover,
+      .bli-workflow-card button[class*="aspect-square"]:focus-visible {
+        transform: translateY(-2px);
+      }
+
+      .bli-report-action {
+        border-radius: 0.95rem !important;
+      }
+
+      .inventory-app-anchor footer {
+        color: #64748b !important;
+      }
+
       @media (max-width: 640px) {
         html,
         body,
@@ -433,6 +871,161 @@
           min-height: 54px !important;
           justify-content: center !important;
           gap: 0.5rem !important;
+        }
+
+        .inventory-app-anchor #root > div > div[class*="-mt-20"] {
+          padding-left: 0.75rem !important;
+          padding-right: 0.75rem !important;
+        }
+
+        .bli-progress-card {
+          border-radius: 1rem !important;
+          padding: 0.45rem !important;
+          margin-bottom: 1rem !important;
+        }
+
+        .bli-workflow-card {
+          border-radius: 1.25rem !important;
+          padding: 1.15rem !important;
+        }
+
+        .bli-workflow-card > div:first-child {
+          padding-bottom: 1rem !important;
+          margin-bottom: 1.25rem !important;
+        }
+      }
+
+      @media (max-width: 980px) {
+        .home-hero {
+          min-height: auto;
+          background:
+            radial-gradient(circle at 18% 45%, rgba(0, 118, 211, 0.2), transparent 32%),
+            linear-gradient(180deg, #061a37 0%, #082450 100%);
+        }
+
+        .home-hero-backdrop {
+          display: none;
+        }
+
+        .home-hero-inner {
+          width: min(100% - 1.5rem, 720px);
+          min-height: 0;
+          display: block;
+          padding: 1.15rem 0 1.75rem;
+        }
+
+        .home-brand-link {
+          margin-bottom: 0.7rem;
+          font-size: 0.95rem;
+        }
+
+        .home-brand-link svg {
+          width: 1.95rem;
+          height: 1.95rem;
+        }
+
+        .home-ai-pill {
+          min-height: 36px;
+          padding: 0.5rem 0.85rem;
+          font-size: 0.76rem;
+          letter-spacing: 0.05em;
+        }
+
+        .home-hero h1 {
+          margin-top: 0.85rem;
+          font-size: clamp(2.2rem, 9.4vw, 2.65rem);
+          line-height: 1.08;
+        }
+
+        .home-mobile-visual {
+          display: block;
+          margin: 1rem 0 1.05rem;
+          overflow: hidden;
+          border-radius: 1.25rem;
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          box-shadow: 0 20px 44px rgba(0, 0, 0, 0.28);
+          background: #0f274f;
+        }
+
+        .home-mobile-visual img {
+          display: block;
+          width: 100%;
+          height: auto;
+        }
+
+        .home-hero-copy p {
+          margin-top: 0;
+          font-size: 1rem;
+          line-height: 1.5;
+        }
+
+        .home-hero-actions {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 0.75rem;
+          margin-top: 1.05rem;
+        }
+
+        .home-hero-btn {
+          width: 100%;
+          min-height: 58px;
+          padding: 0 1rem;
+        }
+
+        .home-hero-trust {
+          align-items: flex-start;
+          font-size: 0.95rem;
+        }
+
+        .home-process-panel {
+          width: min(100% - 1rem, 720px);
+          margin-top: 0;
+          grid-template-columns: 1fr;
+          border-radius: 1.1rem;
+          transform: translateY(0.75rem);
+        }
+
+        .home-process-step {
+          grid-template-columns: 60px 1fr;
+          gap: 0.85rem;
+          min-height: auto;
+          padding: 1rem 1rem 1.05rem;
+        }
+
+        .home-process-step + .home-process-step {
+          border-left: 0;
+          border-top: 1px solid #dbe5f2;
+        }
+
+        .home-process-icon {
+          width: 54px;
+          height: 54px;
+        }
+
+        .home-process-icon svg {
+          width: 1.8rem;
+          height: 1.8rem;
+        }
+
+        .home-step-number {
+          left: 3.25rem;
+          top: 0.75rem;
+          width: 1.35rem;
+          height: 1.35rem;
+          font-size: 0.75rem;
+        }
+
+        .home-process-step h2 {
+          font-size: 1.05rem;
+          margin-bottom: 0.25rem;
+        }
+
+        .home-process-step p {
+          font-size: 0.95rem;
+        }
+
+        .inventory-app-anchor #root > div > div[class*="-mt-20"] {
+          padding-top: 2.25rem !important;
         }
       }
     </style>
@@ -617,12 +1210,67 @@
         roomTab.parentElement.classList.add('bli-segmented-tabs');
       }
 
+      function enhanceAppSurfaces(root) {
+        var appShell = document.querySelector('#inventory-app #root > div');
+        if (appShell) appShell.classList.add('bli-app-shell');
+
+        var progressCards = [].slice.call(root.querySelectorAll ? root.querySelectorAll('#inventory-app div') : [])
+          .filter(function (el) {
+            var text = normalize(el.innerText || '');
+            var cls = el.className || '';
+            return typeof cls === 'string'
+              && /rounded-xl/.test(cls)
+              && /shadow/.test(cls)
+              && /Your Info/i.test(text)
+              && /Add Rooms/i.test(text)
+              && /Report/i.test(text);
+          });
+        progressCards.forEach(function (card) {
+          card.classList.add('bli-progress-card');
+        });
+
+        var mains = [].slice.call(root.querySelectorAll ? root.querySelectorAll('#inventory-app main') : []);
+        mains.forEach(function (main) {
+          var card = main.firstElementChild;
+          if (!card) return;
+          card.classList.add('bli-workflow-card');
+          var text = normalize(card.innerText || '');
+          var screen = 'details';
+          if (/Select or Add a Room|Rooms Specialty|Specialty Collections/i.test(text)) screen = 'rooms';
+          if (/Take Photo|Upload from Gallery|Create List with AI|Update List with AI/i.test(text)) screen = 'capture';
+          if (/Coverage Report|Final Report|Download \/ Print|Email Report|Estimated/i.test(text)) screen = 'report';
+          card.setAttribute('data-screen', screen);
+
+          [].slice.call(card.children || []).forEach(function (child) {
+            var childText = normalize(child.innerText || '');
+            var childCls = child.className || '';
+            if (typeof childCls === 'string' && /rounded-(xl|2xl|3xl)/.test(childCls) && /shadow|border|bg-/.test(childCls)) {
+              child.classList.add('bli-screen-card');
+            }
+            if (/Step 1|Step 2|Take Photos|Your Item List|Photo Tip/i.test(childText)
+                && typeof childCls === 'string'
+                && /rounded-(xl|2xl|3xl)/.test(childCls)) {
+              child.classList.add('bli-photo-step-card');
+            }
+          });
+        });
+
+        var stepHeadings = [].slice.call(root.querySelectorAll ? root.querySelectorAll('#inventory-app main h3, #inventory-app main h4') : []);
+        stepHeadings.forEach(function (heading) {
+          var text = normalize(heading.textContent || '');
+          if (!/(Step 1|Step 2|Take Photos|Your Item List|Photo Tip)/i.test(text)) return;
+          var card = findCard(heading);
+          if (card) card.classList.add('bli-photo-step-card');
+        });
+      }
+
       function enhanceMobileUx(root) {
         enhanceButtons(root);
         enhanceTipCards(root);
         injectRoomStatus(root);
         enhanceEmptyStates(root);
         enhanceSegmentedTabs(root);
+        enhanceAppSurfaces(root);
       }
 
       function bindScrollToTop() {
@@ -636,7 +1284,9 @@
           if (SCREEN_CHANGE_RE.test(text)) {
             // Let React finish its render, then scroll.
             setTimeout(function () {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              var app = document.getElementById('inventory-app');
+              var top = app ? app.getBoundingClientRect().top + window.pageYOffset - 8 : 0;
+              window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
             }, 60);
           }
         }, true);
@@ -662,6 +1312,111 @@
   </script>
 </head>
   <body class="bg-slate-50 text-slate-900 font-sans">
-    <div id="root"></div>
+    <section class="inventory-landing" aria-labelledby="home-inventory-hero-title">
+      <div class="home-hero">
+        <picture class="home-hero-backdrop" aria-hidden="true">
+          <source srcset="assets/home-inventory-hero-visual.webp" type="image/webp">
+          <img src="assets/home-inventory-hero-visual.webp" alt="" width="1012" height="660" decoding="async" fetchpriority="high">
+        </picture>
+
+        <div class="home-hero-inner">
+          <div class="home-hero-copy">
+            <a class="home-brand-link" href="https://www.billlayneinsurance.com/" aria-label="Go to Bill Layne Insurance home page">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 3l7 2.6v5.2c0 4.7-2.9 8.6-7 10.2-4.1-1.6-7-5.5-7-10.2V5.6L12 3z" fill="currentColor"/>
+              </svg>
+              <span>Bill Layne Insurance</span>
+            </a>
+
+            <div class="home-ai-pill">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 2l1.5 5.2L19 9l-5.5 1.8L12 16l-1.5-5.2L5 9l5.5-1.8L12 2z" fill="currentColor"/>
+                <path d="M19 14l.8 2.7 2.7.8-2.7.8L19 21l-.8-2.7-2.7-.8 2.7-.8L19 14zM4.8 13l.6 2 2 .6-2 .6-.6 2-.6-2-2-.6 2-.6.6-2z" fill="currentColor"/>
+              </svg>
+              AI Home Inventory Assistant
+            </div>
+
+            <h1 id="home-inventory-hero-title">Snap room photos.<br>Build a home inventory <span>in minutes.</span></h1>
+
+            <figure class="home-mobile-visual" aria-label="AI home inventory camera preview">
+              <img src="assets/home-inventory-hero-mobile.webp" alt="Phone camera scanning a living room while AI adds household items to an inventory summary" width="860" height="504" decoding="async" fetchpriority="high">
+            </figure>
+
+            <p>Use your phone to capture each room. Our AI identifies furniture, electronics, appliances, decor, and other belongings so you can keep a simple list of what you own and estimate your contents coverage.</p>
+
+            <div class="home-hero-actions" aria-label="Home inventory actions">
+              <a class="home-hero-btn home-hero-btn--primary" href="#inventory-app">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M7 7.5l1.4-2h7.2l1.4 2H20a2 2 0 0 1 2 2v8.5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9.5a2 2 0 0 1 2-2h3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  <circle cx="12" cy="14" r="3.25" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Start your inventory
+              </a>
+              <a class="home-hero-btn home-hero-btn--secondary" href="#inventory-steps">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+                  <path d="M10 8.8l5.2 3.2L10 15.2V8.8z" fill="currentColor"/>
+                </svg>
+                How it works
+              </a>
+            </div>
+
+            <div class="home-hero-trust">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 3l7 2.6v5.2c0 4.7-2.9 8.6-7 10.2-4.1-1.6-7-5.5-7-10.2V5.6L12 3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>A simple way to stay organized <strong>before</strong> a claim happens.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="inventory-steps" class="home-process-panel" aria-label="How the home inventory tool works">
+        <article class="home-process-step">
+          <span class="home-process-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M7 7.5l1.4-2h7.2l1.4 2H20a2 2 0 0 1 2 2v8.5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9.5a2 2 0 0 1 2-2h3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <circle cx="12" cy="14" r="3.25" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+          </span>
+          <span class="home-step-number">1</span>
+          <div>
+            <h2>Photograph Each Room</h2>
+            <p>Use your phone to take quick photos of every room.</p>
+          </div>
+        </article>
+        <article class="home-process-step">
+          <span class="home-process-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 2l1.5 5.2L19 9l-5.5 1.8L12 16l-1.5-5.2L5 9l5.5-1.8L12 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M19 14l.8 2.7 2.7.8-2.7.8L19 21l-.8-2.7-2.7-.8 2.7-.8L19 14zM4.8 13l.6 2 2 .6-2 .6-.6 2-.6-2-2-.6 2-.6.6-2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="home-step-number">2</span>
+          <div>
+            <h2>AI Itemizes Belongings</h2>
+            <p>Our AI identifies items and builds your running inventory list.</p>
+          </div>
+        </article>
+        <article class="home-process-step">
+          <span class="home-process-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 3l7 2.6v5.2c0 4.7-2.9 8.6-7 10.2-4.1-1.6-7-5.5-7-10.2V5.6L12 3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M12 7v10M15 9.5c-.6-.8-1.6-1.2-3-1.2-1.7 0-2.8.8-2.8 2 0 1.3 1.2 1.8 2.8 2 1.8.3 3 .7 3 2.1 0 1.2-1.1 2.1-3 2.1-1.4 0-2.5-.4-3.2-1.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="home-step-number">3</span>
+          <div>
+            <h2>See Your Inventory Total</h2>
+            <p>Review your items and estimated contents coverage in one place.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <div id="inventory-app" class="inventory-app-anchor">
+      <div id="root"></div>
+    </div>
   </body>
 </html>
