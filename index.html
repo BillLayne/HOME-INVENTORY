@@ -767,6 +767,10 @@
         border-radius: 0.95rem !important;
       }
 
+      .bli-disabled-email-action {
+        display: none !important;
+      }
+
       .inventory-app-anchor footer {
         color: #64748b !important;
       }
@@ -1134,8 +1138,13 @@
           }
 
           if (/^(Upload from Gallery|Back to Rooms|Back to All Rooms|Back to Inventory|Cancel|Email Report)$/i.test(text)) {
+            if (/Email Report/i.test(text)) {
+              el.classList.add('bli-disabled-email-action');
+              el.setAttribute('aria-hidden', 'true');
+              el.setAttribute('tabindex', '-1');
+              return;
+            }
             el.classList.add('bli-secondary-action');
-            if (/Email Report/i.test(text)) el.classList.add('bli-report-action');
             return;
           }
 
