@@ -294,6 +294,118 @@
         flex: 0 0 auto !important;
       }
 
+      .bli-photo-ready {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.6rem;
+        margin-top: 0.75rem;
+        padding: 0.85rem 0.95rem;
+        border-radius: 0.85rem;
+        border: 1px solid #a7f3d0;
+        background: #ecfdf5;
+        color: #065f46;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        font-weight: 800;
+      }
+
+      .bli-photo-ready svg {
+        width: 1.1rem;
+        height: 1.1rem;
+        flex: 0 0 auto;
+        margin-top: 0.1rem;
+      }
+
+      .bli-ai-friendly-error {
+        border-color: #fecaca !important;
+        background: #fff7ed !important;
+        color: #7c2d12 !important;
+      }
+
+      .bli-report-meta,
+      .bli-report-disclaimer,
+      .bli-report-next-steps {
+        border: 1px solid rgba(191, 219, 254, 0.9);
+        background: #f8fbff;
+        border-radius: 1rem;
+      }
+
+      .bli-report-meta {
+        display: grid;
+        gap: 0.45rem;
+        margin-top: 1rem;
+        padding: 0.9rem 1rem;
+        color: #16345f;
+        font-size: 0.95rem;
+        line-height: 1.35;
+        font-weight: 700;
+      }
+
+      .bli-report-meta span {
+        min-width: 0;
+      }
+
+      .bli-report-disclaimer {
+        margin-top: 0.75rem;
+        padding: 0.85rem 1rem;
+        color: #334155 !important;
+        font-size: 0.95rem !important;
+        line-height: 1.45 !important;
+      }
+
+      .bli-report-summary-card p,
+      .bli-report-summary-card p strong,
+      .bli-report-summary-card [class*="text-primary"],
+      .bli-report-summary-card [class*="text-slate"] {
+        color: #dbeafe !important;
+      }
+
+      .bli-report-summary-card p strong,
+      .bli-report-summary-card h3,
+      .bli-report-summary-card .font-mono {
+        color: #ffffff !important;
+      }
+
+      .bli-report-next-steps {
+        margin-top: 1rem;
+        padding: 1rem;
+      }
+
+      .bli-report-next-steps h3 {
+        margin: 0 0 0.75rem;
+        color: #061a37 !important;
+        font-size: 1.15rem !important;
+        line-height: 1.35 !important;
+        font-weight: 900;
+      }
+
+      .bli-report-next-steps ul {
+        display: grid;
+        gap: 0.6rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .bli-report-next-steps li {
+        display: flex;
+        gap: 0.55rem;
+        align-items: flex-start;
+        color: #334155;
+        font-size: 0.98rem;
+        line-height: 1.42;
+      }
+
+      .bli-report-next-steps li::before {
+        content: "";
+        width: 0.5rem;
+        height: 0.5rem;
+        flex: 0 0 auto;
+        margin-top: 0.45rem;
+        border-radius: 999px;
+        background: var(--bli-blue);
+      }
+
       .bli-segmented-tabs {
         display: grid !important;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
@@ -882,6 +994,52 @@
         color: #64748b !important;
       }
 
+      @media print {
+        body {
+          background: #ffffff !important;
+        }
+
+        .inventory-landing,
+        .home-process-panel,
+        .bli-progress-card,
+        .bli-report-action,
+        .bli-disabled-email-action,
+        footer {
+          display: none !important;
+        }
+
+        #inventory-app,
+        #inventory-app #root,
+        #inventory-app main {
+          margin: 0 !important;
+          padding: 0 !important;
+          background: #ffffff !important;
+        }
+
+        .bli-app-shell,
+        .bli-workflow-card,
+        .bli-screen-card {
+          margin: 0 !important;
+          padding: 0 !important;
+          border: 0 !important;
+          box-shadow: none !important;
+          background: #ffffff !important;
+        }
+
+        .bli-report-summary-card,
+        .bli-report-next-steps,
+        .bli-report-meta,
+        .bli-report-disclaimer {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+
+        .bli-report-summary-card {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+      }
+
       @media (max-width: 640px) {
         html,
         body,
@@ -1257,10 +1415,196 @@
         return (s || '').replace(/[\u2018\u2019\u02bc\u275b\u275c]/g, "'").replace(/\s+/g, ' ').trim();
       };
 
+      var photoFeedbackState = { count: 0, room: '', at: 0 };
+
+      function getCustomerSnapshot() {
+        try {
+          return JSON.parse(sessionStorage.getItem('bliHomeInventoryCustomer') || '{}') || {};
+        } catch (e) {
+          return {};
+        }
+      }
+
+      function setCustomerSnapshot(data) {
+        try {
+          sessionStorage.setItem('bliHomeInventoryCustomer', JSON.stringify(data || {}));
+        } catch (e) {}
+      }
+
+      function captureCustomerSnapshot(root) {
+        var addressInput = root.querySelector ? root.querySelector('#inventory-app input[name="address"]') : null;
+        if (!addressInput) return;
+        var card = findCard(addressInput) || addressInput.closest('main') || root;
+        var nameInput = card.querySelector ? card.querySelector('input[name="name"]') : null;
+        var data = getCustomerSnapshot();
+        if (nameInput && nameInput.value) data.name = nameInput.value.trim();
+        if (addressInput.value) data.address = addressInput.value.trim();
+        if (data.name || data.address) setCustomerSnapshot(data);
+      }
+
+      function findTextElement(root, selector, pattern) {
+        var nodes = [].slice.call(root.querySelectorAll ? root.querySelectorAll(selector) : []);
+        return nodes.find(function (node) {
+          return pattern.test(normalize(node.textContent || ''));
+        }) || null;
+      }
+
+      function replaceExactText(root, selector, pattern, replacement) {
+        var nodes = [].slice.call(root.querySelectorAll ? root.querySelectorAll(selector) : []);
+        nodes.forEach(function (node) {
+          if (!pattern.test(normalize(node.textContent || ''))) return;
+          node.textContent = replacement;
+        });
+      }
+
+      function cleanPhotoButtonText(el) {
+        if (!/Take Photo/i.test(el.textContent || '')) return;
+        var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        var nodes = [];
+        var node;
+        while ((node = walker.nextNode())) nodes.push(node);
+        nodes.forEach(function (textNode) {
+          var cleaned = textNode.nodeValue
+            .replace(/\uD83D\uDCF8\s*/g, '')
+            .replace(/\s+/g, ' ');
+          if (cleaned !== textNode.nodeValue) textNode.nodeValue = cleaned;
+        });
+        if (!el.getAttribute('aria-label')) el.setAttribute('aria-label', 'Take Photo');
+      }
+
+      function getCaptureRoomName() {
+        var main = document.querySelector('#inventory-app main');
+        if (!main) return '';
+        var headings = [].slice.call(main.querySelectorAll('h1, h2, h3'));
+        var roomHeading = headings.find(function (heading) {
+          var text = normalize(heading.textContent || '');
+          return text
+            && !/Step|Coverage|Welcome|Select|Item List|Photo Tip|Agent/i.test(text)
+            && !/Bill Layne|Inventory|Report/i.test(text);
+        });
+        return roomHeading ? normalize(roomHeading.textContent || '') : '';
+      }
+
+      function injectPhotoReadyFeedback(root) {
+        var input = root.querySelector ? root.querySelector('#inventory-app main input[type="file"]') : null;
+        var existing = [].slice.call(document.querySelectorAll('.bli-photo-ready'));
+        if (!input || !photoFeedbackState.count) {
+          existing.forEach(function (el) { el.remove(); });
+          return;
+        }
+        var room = getCaptureRoomName();
+        if (photoFeedbackState.room && room && photoFeedbackState.room !== room) {
+          existing.forEach(function (el) { el.remove(); });
+          return;
+        }
+        var card = findCard(input);
+        if (!card) return;
+        existing.forEach(function (el) {
+          if (!card.contains(el)) el.remove();
+        });
+        var ready = card.querySelector('.bli-photo-ready');
+        if (!ready) {
+          ready = document.createElement('p');
+          ready.className = 'bli-photo-ready';
+          var trust = card.querySelector('.bli-trust-line[data-where="capture"]');
+          card.insertBefore(ready, trust || null);
+        }
+        var count = photoFeedbackState.count;
+        if (ready.getAttribute('data-count') !== String(count)) {
+          ready.setAttribute('data-count', String(count));
+          ready.innerHTML =
+            '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+              '<path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>' +
+            '</svg>' +
+            '<span>' + count + ' photo' + (count === 1 ? '' : 's') + ' ready. Add another photo or create your AI list.</span>';
+        }
+      }
+
+      function enhanceFriendlyErrors(root) {
+        var nodes = [].slice.call(root.querySelectorAll ? root.querySelectorAll('#inventory-app main div, #inventory-app main p, #inventory-app main span') : []);
+        nodes.forEach(function (node) {
+          var text = normalize(node.textContent || '');
+          if (!/Oops! We had trouble reading those photos\. Please try again\./i.test(text)) return;
+          node.textContent = "We couldn't read that photo clearly. Try a brighter room photo, upload another picture, or add an item manually.";
+          node.classList.add('bli-ai-friendly-error');
+          node.setAttribute('role', 'alert');
+        });
+      }
+
+      function enhanceReport(root) {
+        var reportCard = findTextElement(root, '#inventory-app main .bli-workflow-card, #inventory-app main > div', /Coverage Report/);
+        if (!reportCard) return;
+
+        replaceExactText(reportCard, 'h3, span', /^Recommended Coverage$/i, 'Estimated Contents Starting Point');
+        replaceExactText(reportCard, 'span', /^Replacement Cost Limit$/i, 'Suggested Coverage Review Amount');
+
+        var bufferText = findTextElement(reportCard, 'p, strong', /Why the buffer\?/i);
+        var summaryCard = bufferText ? findCard(bufferText) : null;
+        if (summaryCard) summaryCard.classList.add('bli-report-summary-card');
+
+        var title = findTextElement(reportCard, 'h1, h2, h3', /^Coverage Report$/i);
+        if (title) {
+          var intro = title.nextElementSibling && title.nextElementSibling.tagName === 'P'
+            ? title.nextElementSibling
+            : null;
+          var meta = reportCard.querySelector('.bli-report-meta');
+          if (!meta) {
+            meta = document.createElement('div');
+            meta.className = 'bli-report-meta';
+            (intro || title).insertAdjacentElement('afterend', meta);
+          }
+          var info = getCustomerSnapshot();
+          var dateText = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+          var metaLines = [
+            'Prepared by Bill Layne Insurance',
+            'Date: ' + dateText,
+            info.name ? 'Customer: ' + info.name : '',
+            info.address ? 'Property: ' + info.address : ''
+          ].filter(Boolean);
+          var metaKey = metaLines.join('|');
+          if (meta.getAttribute('data-lines') !== metaKey) {
+            meta.setAttribute('data-lines', metaKey);
+            meta.textContent = '';
+            metaLines.forEach(function (line) {
+              var span = document.createElement('span');
+              span.textContent = line;
+              meta.appendChild(span);
+            });
+          }
+
+          var disclaimer = reportCard.querySelector('.bli-report-disclaimer');
+          if (!disclaimer) {
+            disclaimer = document.createElement('p');
+            disclaimer.className = 'bli-report-disclaimer';
+            disclaimer.textContent = 'AI estimate for planning only. Review with your agent before changing coverage.';
+            meta.insertAdjacentElement('afterend', disclaimer);
+          }
+        }
+
+        var roomHeading = findTextElement(reportCard, 'h3', /^Room-by-Room Breakdown$/i);
+        var roomCard = roomHeading ? findCard(roomHeading) : null;
+        if (roomCard && !reportCard.querySelector('.bli-report-next-steps')) {
+          var next = document.createElement('section');
+          next.className = 'bli-report-next-steps';
+          next.setAttribute('aria-label', 'What to do next');
+          next.innerHTML =
+            '<h3>What To Do Next</h3>' +
+            '<ul>' +
+              '<li>Save or print this report with your insurance papers.</li>' +
+              '<li>Update the inventory once a year or after major purchases.</li>' +
+              '<li>Compare this starting point with your current personal property limit.</li>' +
+              '<li>Ask Bill Layne Insurance to review the coverage if the number seems high or low.</li>' +
+            '</ul>';
+          roomCard.insertAdjacentElement('afterend', next);
+        }
+      }
+
       function enhanceButtons(root) {
         var els = [].slice.call(root.querySelectorAll ? root.querySelectorAll('button, label') : []);
         els.forEach(function (el) {
           var text = normalize(el.innerText || el.textContent || '');
+          cleanPhotoButtonText(el);
+          text = normalize(el.innerText || el.textContent || '');
           if (!text) {
             if (el.tagName === 'BUTTON' && !el.getAttribute('aria-label')) {
               el.setAttribute('aria-label', 'Item action');
@@ -1481,12 +1825,16 @@
       }
 
       function enhanceMobileUx(root) {
+        captureCustomerSnapshot(root);
         enhanceButtons(root);
         enhanceTipCards(root);
         injectRoomStatus(root);
         enhanceEmptyStates(root);
         enhanceSegmentedTabs(root);
         enhanceAppSurfaces(root);
+        injectPhotoReadyFeedback(root);
+        enhanceFriendlyErrors(root);
+        enhanceReport(root);
       }
 
       function bindScrollToTop() {
@@ -1497,6 +1845,9 @@
           if (!btn) return;
           var text = normalize(btn.innerText || btn.textContent || '');
           if (!text) return;
+          if (/^(Let's Start Inventory|Lets Start Inventory)$/i.test(text)) {
+            captureCustomerSnapshot(document);
+          }
           if (SCREEN_CHANGE_RE.test(text)) {
             // Let React finish its render, then scroll.
             setTimeout(function () {
@@ -1511,10 +1862,31 @@
         }, true);
       }
 
+      function bindCustomerAndPhotoEvents() {
+        if (bindCustomerAndPhotoEvents._bound) return;
+        bindCustomerAndPhotoEvents._bound = true;
+        document.addEventListener('input', function (e) {
+          var target = e.target;
+          if (!target || target.tagName !== 'INPUT') return;
+          if (target.name === 'name' || target.name === 'address') {
+            captureCustomerSnapshot(document);
+          }
+        }, true);
+        document.addEventListener('change', function (e) {
+          var target = e.target;
+          if (!target || target.tagName !== 'INPUT' || target.type !== 'file') return;
+          photoFeedbackState.count = target.files ? target.files.length : 0;
+          photoFeedbackState.room = getCaptureRoomName();
+          photoFeedbackState.at = Date.now();
+          setTimeout(function () { injectPhotoReadyFeedback(document); }, 80);
+        }, true);
+      }
+
       function start() {
         injectTrustLines(document);
         enhanceMobileUx(document);
         bindScrollToTop();
+        bindCustomerAndPhotoEvents();
         var mo = new MutationObserver(function () {
           injectTrustLines(document);
           enhanceMobileUx(document);
